@@ -12,9 +12,23 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('home');
+});
+Route::group(['middleware' => ['web']], function () {
+
+    Route::resource('books', 'BooksController');
+
+
 });
 
+Route::group(array('prefix'=>'/templates/'),function(){
+    Route::get('{template}', array( function($template)
+    {
+        $template = str_replace(".html","",$template);
+        View::addExtension('html','php');
+        return View::make('templates.'.$template);
+    }));
+});
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
